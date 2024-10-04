@@ -1,5 +1,7 @@
 # This is the main file of the diet sport chatbot...
 from classes.SportDietChatBot import SportDietChatbot
+# import nltk
+# nltk.download('wordnet')
 
 # Iniciar el chatbot
 if __name__ == "__main__":

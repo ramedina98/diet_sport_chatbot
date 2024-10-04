@@ -1,9 +1,10 @@
 # This class helps me to handle
 
-from bases.diet_knowledge import get_diet_info
+from diet_knowledge import get_diet_info
 from utils.get_plural import get_plural
 from utils.process_input import process_input
 from utils.synonyms_antonyms import get_synonyms
+from utils.noAccents import noAccents
 
 class SportDietChatbot:
     def __init__(self):
@@ -15,30 +16,38 @@ class SportDietChatbot:
         """
         Process the user input and return an answer bases in the knoledge base and the rules...
         """
-        processed_input = process_input(user_input)
+        # The function noAccents cleans the user input, it remove all the accents and returns a
+        # sentence without accents, that helps us to have more controll in the search of a key word in the
+        #knowledge base...
+        clean_input = noAccents(user_input)
+        processed_input = process_input(clean_input)
         response = self._handle_intent(processed_input)
+
+        if response is None:
+            return "Lo siento, no entiendo bien ¿Puedes ser más específico?"
+
         return response
 
     def _handle_intent(self, processed_input):
         """
         Determines user intent based on the words processed...
         """
-        if "adiós" in processed_input or "hasta luego" in processed_input:
+        if "adios" in processed_input or "hasta luego" in processed_input:
             return self._get_farewell_message()
+        elif "gracias" in processed_input:
+            return "De nada, ¿te puedo ayudar en algo más?"
 
         # check if there is a question about sporte diets...
         response = get_diet_info(processed_input)
-        if response:
-            return response
+        if response is None:
+            # If there isn`t a match, try with synonyms and plural...
+            for word in processed_input:
+                synonyms = get_synonyms(word)
+                plural_form = get_plural(word)
+                if synonyms or plural_form:
+                    return get_diet_info(synonyms + [plural_form])
 
-        # If there isn`t a match, try with synonyms and plural...
-        for word in processed_input:
-            synonyms = get_synonyms(word)
-            plural_form = get_plural(word)
-            if synonyms or plural_form:
-                return get_diet_info(synonyms + [plural_form])
-
-        return "Lo siento, no tengo suficiente información sobre ese tema. ¿Puedes ser más específico?"
+        return response
 
     def _get_greeting_message(self):
         """
