@@ -1,5 +1,6 @@
 # This is the main file of the diet sport chatbot...
 from classes.SportDietChatBot import SportDietChatbot
+from utils.noAccents import noAccents
 # import nltk
 # nltk.download('wordnet')
 
@@ -10,8 +11,9 @@ if __name__ == "__main__":
 
     while True:
         user_input = input("Tú: ")
-        if "adiós" in user_input.lower():
+        cleaned_input = noAccents(user_input)
+        if "adios" in cleaned_input.lower():
             print("Chatbot:", chatbot._get_farewell_message())
             break
-        response = chatbot.get_response(user_input.lower())
+        response = chatbot.get_response(cleaned_input.lower())
         print("Chatbot:", response)

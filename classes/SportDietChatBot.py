@@ -4,7 +4,6 @@ from diet_knowledge import get_diet_info
 from utils.get_plural import get_plural
 from utils.process_input import process_input
 from utils.synonyms_antonyms import get_synonyms
-from utils.noAccents import noAccents
 
 class SportDietChatbot:
     def __init__(self):
@@ -19,8 +18,7 @@ class SportDietChatbot:
         # The function noAccents cleans the user input, it remove all the accents and returns a
         # sentence without accents, that helps us to have more controll in the search of a key word in the
         #knowledge base...
-        clean_input = noAccents(user_input)
-        processed_input = process_input(clean_input)
+        processed_input = process_input(user_input)
         response = self._handle_intent(processed_input)
 
         if response is None:
